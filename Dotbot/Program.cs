@@ -1,5 +1,12 @@
+using System.Reflection;
 using Discord;
-using Discord.WebSocket;var builder = WebApplication.CreateBuilder(args);
+using Discord.Interactions;
+using Discord.WebSocket;
+using Dotbot.Discord.Services;
+using Dotbot.EventHandlers;
+using MediatR;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -10,12 +17,14 @@ builder.Services.AddSwaggerGen();
 
 var discordConfig = new DiscordSocketConfig()
 {
-    GatewayIntents = GatewayIntents.AllUnprivileged
+    GatewayIntents = GatewayIntents.AllUnprivileged  | GatewayIntents.GuildMembers | GatewayIntents.MessageContent | GatewayIntents.GuildVoiceStates
 };
 
 builder.Services.AddSingleton(discordConfig);
 builder.Services.AddSingleton<DiscordSocketClient>();
-
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+builder.Services.AddSingleton<IAudioService, AudioService>();
+builder.Services.AddSingleton<DiscordEventListener>();
 
 var app = builder.Build();
 
@@ -39,14 +48,9 @@ client.Log += async (msg) =>
     await Task.CompletedTask;
     Console.WriteLine(msg.Message);
 };
-
-client.MessageReceived += async msg =>
-{
-    await Task.CompletedTask;
-    Console.WriteLine(msg);
-};
-
-await client.LoginAsync(TokenType.Bot, "");
+var listener = app.Services.GetRequiredService<DiscordEventListener>();
+await listener.StartAsync();
+await client.LoginAsync(TokenType.Bot, builder.Configuration["Discord:BotToken"]);
 await client.StartAsync();
 app.Run();
 
