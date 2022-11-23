@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Audio;
 
 namespace Dotbot.Discord.Services;
 

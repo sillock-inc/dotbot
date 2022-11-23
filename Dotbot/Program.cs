@@ -2,6 +2,7 @@ using System.Reflection;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+using Dotbot.Discord.InteractionHandler;
 using Dotbot.Discord.Services;
 using Dotbot.EventHandlers;
 using MediatR;
@@ -17,7 +18,8 @@ builder.Services.AddSwaggerGen();
 
 var discordConfig = new DiscordSocketConfig()
 {
-    GatewayIntents = GatewayIntents.AllUnprivileged  | GatewayIntents.GuildMembers | GatewayIntents.MessageContent | GatewayIntents.GuildVoiceStates
+    GatewayIntents = GatewayIntents.AllUnprivileged  | GatewayIntents.GuildMembers | GatewayIntents.MessageContent | GatewayIntents.GuildVoiceStates,
+    AlwaysDownloadUsers = true,
 };
 
 builder.Services.AddSingleton(discordConfig);
@@ -25,6 +27,8 @@ builder.Services.AddSingleton<DiscordSocketClient>();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddSingleton<IAudioService, AudioService>();
 builder.Services.AddSingleton<DiscordEventListener>();
+builder.Services.AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()));
+builder.Services.AddSingleton<InteractionHandler>();
 
 var app = builder.Build();
 
@@ -42,6 +46,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 var client = app.Services.GetRequiredService<DiscordSocketClient>();
+await app.Services.GetRequiredService<InteractionHandler>()
+    .InitializeAsync();
 
 client.Log += async (msg) =>
 {

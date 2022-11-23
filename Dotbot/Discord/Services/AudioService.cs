@@ -3,6 +3,7 @@ using System.Diagnostics;
 using CliWrap;
 using Discord;
 using Discord.Audio;
+using Discord.Commands;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 
@@ -11,12 +12,11 @@ namespace Dotbot.Discord.Services;
 public class AudioService : IAudioService
 {
     private readonly ConcurrentDictionary<ulong, IAudioClient> _connectedChannels = new ConcurrentDictionary<ulong, IAudioClient>();
-
-    private IAudioClient _client;
+    
     public async Task JoinAudio(IGuild guild, IVoiceChannel target)
     {
-        
-        if (_connectedChannels.TryGetValue(guild.Id, out _client))
+        IAudioClient client;
+        if (_connectedChannels.TryGetValue(guild.Id, out client))
         {
             return;
         }
@@ -37,15 +37,17 @@ public class AudioService : IAudioService
 
     public async Task LeaveAudio(IGuild guild)
     {
-        if (_connectedChannels.TryRemove(guild.Id, out _client))
+        IAudioClient client;
+        if (_connectedChannels.TryRemove(guild.Id, out client))
         {
-            await _client.StopAsync();
+            await client.StopAsync();
             //await Log(LogSeverity.Info, $"Disconnected from voice on {guild.Name}.");
         }
     }
     
     public async Task SendAudioAsync(IGuild guild, IMessageChannel channel, string url)
     {
+        IAudioClient client;
         // Your task: Get a full path to the file if the value of 'path' is only a filename.
         /*
         if (!File.Exists(path))
@@ -53,7 +55,10 @@ public class AudioService : IAudioService
             await channel.SendMessageAsync("File does not exist.");
             return;
         }*/
-        if (_connectedChannels.TryGetValue(guild.Id, out _client))
+
+        int offsetInSeconds = 0;
+        if (url.Contains("?t")) offsetInSeconds = int.Parse(url.Split("?t=")[1]);
+        if (_connectedChannels.TryGetValue(guild.Id, out client))
         {
             
             var youtube = new YoutubeClient();
@@ -70,9 +75,12 @@ public class AudioService : IAudioService
                 .WithStandardOutputPipe(PipeTarget.ToStream(memoryStream))
                 .ExecuteAsync();
             
+            var video =  await youtube.Videos.GetAsync(url);
             
-            using (var discord = _client.CreatePCMStream(AudioApplication.Mixed))
+            using (var discord = client.CreatePCMStream(AudioApplication.Mixed))
             {
+                var offsetPercentage = offsetInSeconds / video.Duration.Value.TotalSeconds;
+                //(int)(memoryStream.ToArray().Length*offsetPercentage)
                 try {await discord.WriteAsync(memoryStream.ToArray(), 0, (int)memoryStream.Length); }
                 finally { await discord.FlushAsync(); }
             }
