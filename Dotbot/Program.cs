@@ -2,10 +2,12 @@ using System.Reflection;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+using Dotbot.Discord.Models;
 using Dotbot.Discord.InteractionHandler;
 using Dotbot.Discord.Services;
 using Dotbot.EventHandlers;
 using MediatR;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,16 @@ var discordConfig = new DiscordSocketConfig()
     GatewayIntents = GatewayIntents.AllUnprivileged  | GatewayIntents.GuildMembers | GatewayIntents.MessageContent | GatewayIntents.GuildVoiceStates,
     AlwaysDownloadUsers = true,
 };
+
+// var section = builder.Configuration.GetSection("MongoDbSettings");
+//
+// var settings = MongoClientSettings.FromConnectionString(section["ConnectionString"]);
+//
+// var mongoClient = new MongoClient(settings);
+//
+// var collection = mongoClient.GetDatabase("test").GetCollection<ChatServer>("springGuild");
+//
+// var ourServer = collection.AsQueryable().FirstOrDefault(x => x.ServiceId == "632651372260753458");
 
 builder.Services.AddSingleton(discordConfig);
 builder.Services.AddSingleton<DiscordSocketClient>();
