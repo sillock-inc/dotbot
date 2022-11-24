@@ -1,10 +1,10 @@
 ﻿using Discord;
-using Dotbot.Events;
+using Dotbot.Discord.Events;
 using MediatR;
 
-namespace Dotbot.EventHandlers;
+namespace Dotbot.Discord.EventHandlers;
 
-public class MessageReceivedHandler : INotificationHandler<DiscordMessageReceivedNotification>
+public class DiscordMessageReceivedHandler : INotificationHandler<DiscordMessageReceivedNotification>
 {
     public async Task Handle(DiscordMessageReceivedNotification notification, CancellationToken cancellationToken)
     {

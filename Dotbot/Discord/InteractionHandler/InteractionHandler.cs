@@ -40,8 +40,9 @@ public class InteractionHandler
         {
             // Context & Slash commands can be automatically registered, but this process needs to happen after the client enters the READY state.
             // Since Global Commands take around 1 hour to register, we should use a test guild to instantly update and test our commands.
-            if (true)
-                await _handler.RegisterCommandsToGuildAsync(_configuration.GetValue<ulong>("testGuild"), true);
+            var testGuild = _configuration.GetValue<ulong?>("testGuild");
+            if (testGuild != null)
+                await _handler.RegisterCommandsToGuildAsync(testGuild.Value, true);
             else
                 await _handler.RegisterCommandsGloballyAsync(true);
         }

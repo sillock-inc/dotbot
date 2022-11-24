@@ -6,16 +6,16 @@ using RunMode = Discord.Interactions.RunMode;
 
 namespace Dotbot.Discord.Modules;
 
-public class SomeModule : InteractionModuleBase<SocketInteractionContext>
+public class InteractionModule : InteractionModuleBase<SocketInteractionContext>
 {
-            // Dependencies can be accessed through Property injection, public properties with public setters will be set by the service provider
+    // Dependencies can be accessed through Property injection, public properties with public setters will be set by the service provider
         public InteractionService Commands { get; set; }
 
         private InteractionHandler.InteractionHandler _handler;
         private readonly IAudioService _audioService;
 
         // Constructor injection is also a valid way to access the dependencies
-        public SomeModule(InteractionHandler.InteractionHandler handler, IAudioService audioService)
+        public InteractionModule(InteractionHandler.InteractionHandler handler, IAudioService audioService)
         {
             _handler = handler;
             _audioService = audioService;
@@ -27,7 +27,7 @@ public class SomeModule : InteractionModuleBase<SocketInteractionContext>
 
         // [Summary] lets you customize the name and the description of a parameter
         [SlashCommand("echo", "Repeat the input")]
-        public async Task Echo(string echo, [global::Discord.Interactions.Summary(description: "mention the user")]bool mention = false)
+        public async Task Echo(string echo, [global::Discord.Interactions.Summary(description: "mention the user")] bool mention = false)
             => await RespondAsync(echo + (mention ? Context.User.Mention : string.Empty));
 
         [SlashCommand("ping", "Pings the bot and returns its latency.")]
@@ -38,7 +38,7 @@ public class SomeModule : InteractionModuleBase<SocketInteractionContext>
         public async Task GetBitrateAsync([ChannelTypes(ChannelType.Voice, ChannelType.Stage)] IChannel channel)
             => await RespondAsync(text: $"This voice channel has a bitrate of {(channel as IVoiceChannel).Bitrate}");
 
-        [SlashCommand("play", "play moosic",false, RunMode.Async)]
+        [SlashCommand("play", "play music",false, RunMode.Async)]
         public async Task PlayCmd([Remainder] string song)
         {
             await _audioService.JoinAudio(Context.Guild, (Context.User as IVoiceState).VoiceChannel);

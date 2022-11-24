@@ -11,7 +11,7 @@ namespace Dotbot.Discord.Services;
 
 public class AudioService : IAudioService
 {
-    private readonly ConcurrentDictionary<ulong, IAudioClient> _connectedChannels = new ConcurrentDictionary<ulong, IAudioClient>();
+    private readonly ConcurrentDictionary<ulong, IAudioClient> _connectedChannels = new();
     
     public async Task JoinAudio(IGuild guild, IVoiceChannel target)
     {
@@ -48,13 +48,6 @@ public class AudioService : IAudioService
     public async Task SendAudioAsync(IGuild guild, IMessageChannel channel, string url)
     {
         IAudioClient client;
-        // Your task: Get a full path to the file if the value of 'path' is only a filename.
-        /*
-        if (!File.Exists(path))
-        {
-            await channel.SendMessageAsync("File does not exist.");
-            return;
-        }*/
 
         int offsetInSeconds = 0;
         if (url.Contains("?t")) offsetInSeconds = int.Parse(url.Split("?t=")[1]);
@@ -85,16 +78,5 @@ public class AudioService : IAudioService
                 finally { await discord.FlushAsync(); }
             }
         }
-    }
-
-    private Process CreateProcess(string path)
-    {
-        return Process.Start(new ProcessStartInfo
-        {
-            FileName = "ffmpeg.exe",
-            Arguments = $"-hide_banner -loglevel panic -i \"{path}\" -ac 2 -f s16le -ar 48000 pipe:1",
-            UseShellExecute = false,
-            RedirectStandardOutput = true
-        });
     }
 }
