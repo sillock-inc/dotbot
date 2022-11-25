@@ -2,13 +2,19 @@ using System.Reflection;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+using Dotbot.Common.CommandHandlers;
+using Dotbot.Common.Factories;
+using Dotbot.Common.Models;
+using Dotbot.Common.Services;
 using Dotbot.Discord.EventListeners;
-using Dotbot.Discord.Models;
 using Dotbot.Discord.InteractionHandler;
 using Dotbot.Discord.Services;
+using Dotbot.Discord.Settings;
 using Dotbot.Extensions.Discord;
 using Dotbot.Extensions.MongoDb;
 using MediatR;
+using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,16 +26,9 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Services.AddSwaggerGen();
 
 
-
-// var section = builder.Configuration.GetSection("MongoDbSettings");
-//
-// var settings = MongoClientSettings.FromConnectionString(section["ConnectionString"]);
-//
-// var mongoClient = new MongoClient(settings);
-//
-// var collection = mongoClient.GetDatabase("test").GetCollection<ChatServer>("springGuild");
-//
-// var ourServer = collection.AsQueryable().FirstOrDefault(x => x.ServiceId == "632651372260753458");
+var section = builder.Configuration.GetSection("MongoDbSettings");
+var settings = MongoClientSettings.FromConnectionString(section["ConnectionString"]);
+var mongoClient = new MongoClient(settings);
 
 //Discord registrations
 var discordConfig = new DiscordSocketConfig()
@@ -37,6 +36,14 @@ var discordConfig = new DiscordSocketConfig()
     GatewayIntents = GatewayIntents.AllUnprivileged  | GatewayIntents.GuildMembers | GatewayIntents.MessageContent | GatewayIntents.GuildVoiceStates,
     AlwaysDownloadUsers = true,
 };
+//builder.Services.AddSingleton<IMongoClient>(mongoClient);
+var db = mongoClient.GetDatabase("test");
+builder.Services.AddSingleton(db);
+builder.Services.AddSingleton<IGridFSBucket>(new GridFSBucket(db));
+builder.Services.AddMongoDbCollection<ChatServer, ChatServerClassMapExtension>("springGuild", new ChatServerClassMapExtension());
+builder.Services.AddMongoDbCollection<BotCommand, DiscordCommandClassMapExtension>("DiscordCommands", new DiscordCommandClassMapExtension());
+
+builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.AddSingleton(discordConfig);
 builder.Services.AddSingleton<DiscordSocketClient>();
 builder.Services.AddSingleton<IAudioService, AudioService>();
@@ -44,10 +51,14 @@ builder.Services.AddSingleton(x => new InteractionService(x.GetRequiredService<D
 builder.Services.AddSingleton<InteractionHandler>();
 builder.Services.AddSingleton<MessageReceivedEventListener>();
 
-builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+//TODO: .AddImplementingInterfaces
+builder.Services.AddTransient<IGridFsFileService, GridFsFileService>();
+builder.Services.AddTransient<IBotCommandHandler, DefaultBotCommandHandler>();
+builder.Services.AddTransient<IBotCommandHandler, PingBotCommandHandler>();
+builder.Services.AddSingleton<IBotCommandHandlerFactory, BotCommandHandlerFactory>();
+builder.Services.AddTransient<IBotCommandService, BotCommandService>();
 
-builder.Services.AddMongoDbCollection<ChatServer, ChatServerClassMapExtension>(new ChatServerClassMapExtension());
-builder.Services.AddMongoDbCollection<DiscordCommand, DiscordCommandClassMapExtension>(new DiscordCommandClassMapExtension());
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 

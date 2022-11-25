@@ -1,4 +1,4 @@
-﻿using Dotbot.Discord.Models;
+﻿using Dotbot.Common.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;

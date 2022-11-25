@@ -1,7 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace Dotbot.Discord.Models;
+﻿namespace Dotbot.Common.Models;
 
 public class ChatServer
 {

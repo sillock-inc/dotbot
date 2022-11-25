@@ -1,9 +1,6 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿namespace Dotbot.Common.Models;
 
-namespace Dotbot.Discord.Models;
-
-public class DiscordCommand
+public class BotCommand
 {
     public enum CommandType
     {
