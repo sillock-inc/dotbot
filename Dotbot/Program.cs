@@ -55,6 +55,7 @@ builder.Services.AddSingleton<MessageReceivedEventListener>();
 builder.Services.AddTransient<IGridFsFileService, GridFsFileService>();
 builder.Services.AddTransient<IBotCommandHandler, DefaultBotCommandHandler>();
 builder.Services.AddTransient<IBotCommandHandler, PingBotCommandHandler>();
+builder.Services.AddTransient<IBotCommandHandler, SaveBotCommandHandler>();
 builder.Services.AddSingleton<IBotCommandHandlerFactory, BotCommandHandlerFactory>();
 builder.Services.AddTransient<IBotCommandService, BotCommandService>();
 

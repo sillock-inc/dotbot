@@ -38,4 +38,14 @@ public class DiscordChannelMessageContext : IServiceContext
     {
         return _message.Channel.Id.ToString();
     }
+
+    public async Task<bool> HasAttachments()
+    {
+        return _message.Attachments.Any();
+    }
+
+    public async Task<IReadOnlyCollection<Attachment>> GetAttachments()
+    {
+        return _message.Attachments;
+    }
 }

@@ -1,4 +1,6 @@
-﻿namespace Dotbot.Common.CommandHandlers;
+﻿using Discord;
+
+namespace Dotbot.Common.CommandHandlers;
 
 public interface IServiceContext
 {
@@ -8,5 +10,6 @@ public interface IServiceContext
 
     Task<string> GetServerId();
     Task<string> GetChannelId();
-
+    Task<bool> HasAttachments();
+    Task<IReadOnlyCollection<Attachment>> GetAttachments();
 }

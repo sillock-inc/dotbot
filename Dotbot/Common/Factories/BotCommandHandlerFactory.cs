@@ -15,7 +15,7 @@ public class BotCommandHandlerFactory : IBotCommandHandlerFactory
 
     public IBotCommandHandler GetCommand(string str)
     {
-        var cmd = _handlers.FirstOrDefault(x => x.Match(str));
+        var cmd = _handlers.FirstOrDefault(x => x.Match(str.ToLower()));
         return cmd ?? _defaultBotCommandHandler;
     }
 }
