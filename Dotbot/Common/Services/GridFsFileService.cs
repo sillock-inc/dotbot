@@ -1,5 +1,7 @@
-﻿using MongoDB.Driver;
+﻿using FluentResults;
+using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
+using static FluentResults.Result;
 
 namespace Dotbot.Common.Services;
 
@@ -12,7 +14,7 @@ public class GridFsFileService : IGridFsFileService
         _gridFsBucket = gridFsBucket;
     }
 
-    public async Task<Stream?> GetFile(string fileName)
+    public async Task<Result<Stream>> GetFile(string fileName)
     {
         var filter = Builders<GridFSFileInfo>.Filter.And(Builders<GridFSFileInfo>.Filter.Eq(x => x.Filename, fileName));
         var options = new GridFSFindOptions
@@ -22,16 +24,12 @@ public class GridFsFileService : IGridFsFileService
 
         using var cursor = await _gridFsBucket.FindAsync(filter, options);
         var fileInfo = (await cursor.ToListAsync()).FirstOrDefault();
-        if (fileInfo == null)
-        {
-            return null;
-        }
-            
-        return await _gridFsBucket.OpenDownloadStreamAsync(fileInfo.Id);;
+        return fileInfo == null ? Fail("No file found") : Ok<Stream>(await _gridFsBucket.OpenDownloadStreamAsync(fileInfo.Id));
     }
 
-    public async Task SaveFile(string fileName, Stream fileStream)
+    public async Task<Result> SaveFile(string fileName, Stream fileStream)
     {
         await _gridFsBucket.UploadFromStreamAsync(fileName, fileStream);
+        return Ok();
     }
 }

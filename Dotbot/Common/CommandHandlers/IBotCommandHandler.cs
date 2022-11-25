@@ -1,7 +1,9 @@
-﻿namespace Dotbot.Common.CommandHandlers;
+﻿using FluentResults;
+
+namespace Dotbot.Common.CommandHandlers;
 public interface IBotCommandHandler
 {
     bool Match(string? s);
 
-    Task<bool> HandleAsync(string content, IServiceContext context);
+    Task<Result> HandleAsync(string content, IServiceContext context);
 }

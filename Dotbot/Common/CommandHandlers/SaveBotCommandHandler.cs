@@ -1,4 +1,6 @@
 ﻿using Dotbot.Common.Services;
+using FluentResults;
+using static FluentResults.Result;
 
 namespace Dotbot.Common.CommandHandlers;
 
@@ -13,7 +15,7 @@ public class SaveBotCommandHandler: IBotCommandHandler
 
     public bool Match(string? s) => s == "save";
 
-    public async Task<bool> HandleAsync(string content, IServiceContext context)
+    public async Task<Result> HandleAsync(string content, IServiceContext context)
     {
         var split = content.Split(' ');
         var key = split[1];
@@ -24,23 +26,31 @@ public class SaveBotCommandHandler: IBotCommandHandler
             var httpClient = new HttpClient();
             var fileStream = await httpClient.GetStreamAsync(attachments.Url);
 
-            await _botCommandService.SaveCommand(await context.GetServerId(), key, attachments.Filename, fileStream,
+            var result = await _botCommandService.SaveCommand(await context.GetServerId(), key, attachments.Filename, fileStream,
                 true);
+            if (result.IsFailed)
+            {
+                await context.SendMessageAsync("Failed to save command");
+            }
         }
         else
         {
             if (split.Length < 3)
             {
                 await context.SendMessageAsync("No content given");
-                return false;
+                return Fail("No content given");
             }
 
             var commandContent = string.Join(" ", split[2..]);
-            await _botCommandService.SaveCommand(await context.GetServerId(), key, commandContent, true);
+            var result = await _botCommandService.SaveCommand(await context.GetServerId(), key, commandContent, true);
+            if (result.IsFailed)
+            {
+                await context.SendMessageAsync($"Failed to save command:");
+            };
         }
 
         await context.SendMessageAsync($"Saved command as {key}");
         
-        return true;
+        return Ok();
     }
 }

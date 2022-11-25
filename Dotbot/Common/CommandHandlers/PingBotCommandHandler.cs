@@ -1,11 +1,14 @@
-﻿namespace Dotbot.Common.CommandHandlers;
+﻿using FluentResults;
+using static FluentResults.Result;
+
+namespace Dotbot.Common.CommandHandlers;
 
 public class PingBotCommandHandler: IBotCommandHandler
 {
     public bool Match(string? s) => s == "ping";
-    public async Task<bool> HandleAsync(string content, IServiceContext context)
+    public async Task<Result> HandleAsync(string content, IServiceContext context)
     {
         await context.ReplyAsync("pong");
-        return true;
+        return Ok();
     }
 }
