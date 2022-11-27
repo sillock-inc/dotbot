@@ -1,6 +1,4 @@
 ﻿using Discord;
-using Dotbot.Common.Factories;
-using Dotbot.Discord.CommandHandlers;
 using Dotbot.Discord.Events;
 using MediatR;
 
@@ -19,7 +17,7 @@ public class ChatActionReceivedHandler : INotificationHandler<DiscordMessageRece
     {
         if (notification.Message.Content.ToLower() == "lol")
         {
-            await notification.Message.AddReactionAsync(new Emoji(":rolling_on_the_floor_laughing:"));
+            await notification.Message.AddReactionAsync(new Emoji("🤣"));
         }
     }
 }
