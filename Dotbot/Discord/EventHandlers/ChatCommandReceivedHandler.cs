@@ -5,18 +5,20 @@ using MediatR;
 
 namespace Dotbot.Discord.EventHandlers;
 
-public class DiscordMessageReceivedHandler : INotificationHandler<DiscordMessageReceivedNotification>
+public class ChatCommandReceivedHandler : INotificationHandler<DiscordMessageReceivedNotification>
 {
+    private readonly ILogger _logger;
     private readonly IBotCommandHandlerFactory _commandHandlerFactory;
 
-    public DiscordMessageReceivedHandler(IBotCommandHandlerFactory commandHandlerFactory)
+    public ChatCommandReceivedHandler(IBotCommandHandlerFactory commandHandlerFactory, ILogger<ChatCommandReceivedHandler> logger)
     {
         _commandHandlerFactory = commandHandlerFactory;
+        _logger = logger;
     }
 
     public async Task Handle(DiscordMessageReceivedNotification notification, CancellationToken cancellationToken)
     {
-        Console.WriteLine($"MediatR works! (Received a message by {notification.Message.Author.Username})");
+        _logger.LogInformation("<{AuthorUsername}>: {Message}", notification.Message.Author.Username, notification.Message.Content);
 
         var messageSplit = notification.Message.Content.Split(' ');
 
