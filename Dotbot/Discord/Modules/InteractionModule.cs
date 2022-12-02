@@ -42,8 +42,16 @@ public class InteractionModule : InteractionModuleBase<SocketInteractionContext>
         public async Task PlayCmd([Remainder] string song)
         {
             await _audioService.JoinAudio(Context.Guild, (Context.User as IVoiceState).VoiceChannel);
-            await _audioService.SendAudioAsync(Context.Guild, Context.Channel, song);
+            await RespondAsync($"Playing audio");
+            await _audioService.EnqueueAudio(Context.Guild, Context.Channel, song);
         }
+        
+        [SlashCommand("skip", "Skip current track",false, RunMode.Async)]
+        public async Task SkipCmd()
+        {
+            await _audioService.Skip(Context.Guild, Context.Channel);
+        }
+        
         // Use [ComponentInteraction] to handle message component interactions. Message component interaction with the matching customId will be executed.
         // Alternatively, you can create a wild card pattern using the '*' character. Interaction Service will perform a lazy regex search and capture the matching strings.
         // You can then access these capture groups from the method parameters, in the order they were captured. Using the wild card pattern, you can cherry pick component interactions.
