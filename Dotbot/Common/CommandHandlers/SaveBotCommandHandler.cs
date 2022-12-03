@@ -17,8 +17,7 @@ public class SaveBotCommandHandler: IBotCommandHandler
         _httpClient = httpClient;
         _fileService = fileService;
     }
-
-    public bool Match(string? s) => s == "save";
+    
     public CommandType CommandType => CommandType.Save;
 
     public async Task<Result> HandleAsync(string content, IServiceContext context)

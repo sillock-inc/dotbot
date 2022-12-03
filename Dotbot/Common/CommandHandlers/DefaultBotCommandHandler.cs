@@ -19,7 +19,6 @@ public class DefaultBotCommandHandler : IBotCommandHandler
     }
 
     public CommandType CommandType => CommandType.Default;
-    public bool Match(string? s) => s == null;
 
     public async Task<Result> HandleAsync(string content, IServiceContext context)
     {
