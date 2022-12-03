@@ -2,16 +2,16 @@
 
 public abstract class Entity
 {
-    Guid _Id;
-    public virtual Guid Id
+    string _id;
+    public virtual string Id
     {
         get
         {
-            return _Id;
+            return _id;
         }
         set
         {
-            _Id = value;
+            _id = value;
         }
     }
 }

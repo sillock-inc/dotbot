@@ -1,6 +1,10 @@
 ﻿using System.Diagnostics;
+using Dotbot.Infrastructure.Entities;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace Dotbot.Extensions.MongoDb;
@@ -15,6 +19,19 @@ public static class MongoDbDependencyConfigurationExtensions
         {
             try
             {
+                if (!BsonClassMap.IsClassMapRegistered(typeof(Entity)))
+                {
+                    BsonClassMap.RegisterClassMap<Entity>(cme =>
+                    {
+                        cme.SetIsRootClass(true);
+                        cme.AutoMap();
+                        cme.MapIdMember(x => x.Id)
+                            .SetIgnoreIfDefault(true)
+                            .SetIdGenerator(StringObjectIdGenerator.Instance)
+                            .SetSerializer(new StringSerializer(BsonType.ObjectId));
+                    });
+                }
+                
                 if (!BsonClassMap.IsClassMapRegistered(typeof(T)))
                 {
                     classMapExtension.Register();

@@ -2,6 +2,7 @@
 using Dotbot.Infrastructure.Repositories;
 using Dotbot.Infrastructure.Services;
 using FluentResults;
+using MongoDB.Driver;
 using static FluentResults.Result;
 
 namespace Dotbot.Common.CommandHandlers;
@@ -17,6 +18,7 @@ public class DefaultBotCommandHandler : IBotCommandHandler
         _fileService = fileService;
     }
 
+    public CommandType CommandType => CommandType.Default;
     public bool Match(string? s) => s == null;
 
     public async Task<Result> HandleAsync(string content, IServiceContext context)

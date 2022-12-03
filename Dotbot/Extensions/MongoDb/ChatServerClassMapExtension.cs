@@ -1,5 +1,8 @@
 ﻿using Dotbot.Infrastructure.Entities;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
+using MongoDB.Bson.Serialization.Serializers;
 
 namespace Dotbot.Extensions.MongoDb;
 
@@ -9,10 +12,7 @@ public class ChatServerClassMapExtension : IClassMapExtension
     {
         return BsonClassMap.RegisterClassMap<ChatServer>(cm =>
         {
-            cm.AutoMap();
             cm.SetIgnoreExtraElements(true);
-
-            cm.MapIdProperty(m => m.Id);
             cm.MapMember(m => m.ServiceId)
                 .SetElementName("guildId");
             cm.MapMember(m => m.UserWordCounts)

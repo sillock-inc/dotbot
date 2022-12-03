@@ -19,6 +19,7 @@ public class SaveBotCommandHandler: IBotCommandHandler
     }
 
     public bool Match(string? s) => s == "save";
+    public CommandType CommandType => CommandType.Save;
 
     public async Task<Result> HandleAsync(string content, IServiceContext context)
     {
@@ -35,8 +36,7 @@ public class SaveBotCommandHandler: IBotCommandHandler
             var fileUploadResult = await _fileService.SaveFile($"{serverId}:{attachments.Filename}:{key}", fileStream);
             if (fileUploadResult.IsFailed) return Fail(fileUploadResult.Errors);
             
-            var result = await _botCommandRepository.SaveCommand(serverId, key, attachments.Filename, fileStream,
-                true);
+            var result = await _botCommandRepository.SaveCommand(serverId, key, attachments.Filename, fileStream, true);
             if (result.IsFailed)
             {
                 await context.SendMessageAsync("Failed to save command");
