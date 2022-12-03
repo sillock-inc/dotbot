@@ -1,8 +1,8 @@
 ﻿using FluentResults;
 
-namespace Dotbot.Common.Services;
+namespace Dotbot.Infrastructure.Services;
 
-public interface IGridFsFileService
+public interface IFileService
 {
     Task<Result<Stream>> GetFile(string fileName);
     Task<Result> SaveFile(string fileName, Stream fileStream);

@@ -1,14 +1,12 @@
-﻿namespace Dotbot.Common.Models;
+﻿namespace Dotbot.Infrastructure.Entities;
 
-public class BotCommand
+public class BotCommand : Entity
 {
     public enum CommandType
     {
         STRING,
         FILE
     }
-    
-    public string? Id { get; set; }
     
     public string ServiceId { get; set; }
     public string Key { get; set; }

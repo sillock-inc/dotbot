@@ -1,9 +1,7 @@
-﻿namespace Dotbot.Common.Models;
+﻿namespace Dotbot.Infrastructure.Entities;
 
-public class ChatServer
+public class ChatServer : Entity
 {
-    public string? Id { get; set; }
-    
     public string ServiceId { get; set; }
     
     public Dictionary<string, int> UserWordCounts { get; set; } = new();

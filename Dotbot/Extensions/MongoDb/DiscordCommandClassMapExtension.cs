@@ -1,8 +1,5 @@
-﻿using Dotbot.Common.Models;
-using MongoDB.Bson;
+﻿using Dotbot.Infrastructure.Entities;
 using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.IdGenerators;
-using MongoDB.Bson.Serialization.Serializers;
 
 namespace Dotbot.Extensions.MongoDb;
 
@@ -13,9 +10,7 @@ public class DiscordCommandClassMapExtension : IClassMapExtension
         return BsonClassMap.RegisterClassMap<BotCommand>(cm =>
         {
             cm.SetIgnoreExtraElements(true);
-            cm.MapIdProperty(m => m.Id)
-                .SetIdGenerator(StringObjectIdGenerator.Instance)
-                .SetSerializer(new StringSerializer(BsonType.ObjectId));
+            cm.MapIdProperty(m => m.Id);
             cm.MapMember(m => m.ServiceId)
                 .SetElementName("guildId");
             cm.MapMember(m => m.Key)

@@ -1,21 +1,21 @@
-﻿using Dotbot.Common.Models;
+﻿using Dotbot.Infrastructure.Entities;
 using FluentResults;
 using MongoDB.Driver;
 
-namespace Dotbot.Common.Services;
+namespace Dotbot.Infrastructure.Repositories;
 
-public class ChatServerService : IChatServerService
+public class ChatServerRepository : IChatServerRepository
 {
-    private readonly IMongoCollection<ChatServer> _collection;
+    private readonly DbContext _dbContext;
 
-    public ChatServerService(IMongoCollection<ChatServer> collection)
+    public ChatServerRepository(DbContext dbContext)
     {
-        _collection = collection;
+        _dbContext = dbContext;
     }
 
     public async Task<Result<ChatServer>> GetServerAsync(string serverId)
     {
-        var server = _collection.AsQueryable().FirstOrDefault(x => x.ServiceId == serverId);
+        var server = _dbContext.ChatServers.AsQueryable().FirstOrDefault(x => x.ServiceId == serverId);
 
         return server == null ? Result.Fail("No such server") : Result.Ok(server);
 
@@ -27,7 +27,7 @@ public class ChatServerService : IChatServerService
         {
             return Result.Fail("Server already exists");
         }
-        await _collection.InsertOneAsync(new ChatServer(serverId));
+        await _dbContext.ChatServers.InsertOneAsync(new ChatServer(serverId));
         return await GetServerAsync(serverId);
     }
 }

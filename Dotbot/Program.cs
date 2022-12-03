@@ -4,14 +4,17 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Dotbot.Common.CommandHandlers;
 using Dotbot.Common.Factories;
-using Dotbot.Common.Models;
-using Dotbot.Common.Services;
+using Dotbot.Common.Settings;
 using Dotbot.Discord.EventListeners;
 using Dotbot.Discord.InteractionHandler;
 using Dotbot.Discord.Services;
 using Dotbot.Discord.Settings;
 using Dotbot.Extensions.Discord;
 using Dotbot.Extensions.MongoDb;
+using Dotbot.Infrastructure;
+using Dotbot.Infrastructure.Entities;
+using Dotbot.Infrastructure.Repositories;
+using Dotbot.Infrastructure.Services;
 using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
@@ -47,28 +50,33 @@ internal static class Program
         var db = mongoClient.GetDatabase("test");
         builder.Services.AddSingleton(db);
         builder.Services.AddSingleton<IGridFSBucket>(new GridFSBucket(db));
-        builder.Services.AddMongoDbCollection<ChatServer, ChatServerClassMapExtension>("springGuild",
-            new ChatServerClassMapExtension());
-        builder.Services.AddMongoDbCollection<BotCommand, DiscordCommandClassMapExtension>("DiscordCommands",
-            new DiscordCommandClassMapExtension());
+        builder.Services.AddMongoDbCollection<ChatServer, ChatServerClassMapExtension>("springGuild", new ChatServerClassMapExtension());
+        builder.Services.AddMongoDbCollection<BotCommand, DiscordCommandClassMapExtension>("DiscordCommands", new DiscordCommandClassMapExtension());
 
         builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
+        builder.Services.Configure<BotSettings>(builder.Configuration.GetSection("BotSettings"));
+        
         builder.Services.AddSingleton(discordConfig);
         builder.Services.AddSingleton<DiscordSocketClient>();
         builder.Services.AddSingleton<IAudioService, AudioService>();
         builder.Services.AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()));
         builder.Services.AddSingleton<InteractionHandler>();
         builder.Services.AddSingleton<MessageReceivedEventListener>();
-
+        builder.Services.AddHttpClient<SaveBotCommandHandler>();
+        
+        
         //TODO: .AddImplementingInterfaces
-        builder.Services.AddTransient<IGridFsFileService, GridFsFileService>();
+        builder.Services.AddTransient<IFileService, FileService>();
         builder.Services.AddTransient<IBotCommandHandler, DefaultBotCommandHandler>();
         builder.Services.AddTransient<IBotCommandHandler, PingBotCommandHandler>();
         builder.Services.AddTransient<IBotCommandHandler, SaveBotCommandHandler>();
         builder.Services.AddSingleton<IBotCommandHandlerFactory, BotCommandHandlerFactory>();
-        builder.Services.AddTransient<IChatServerService, ChatServerService>();
-        builder.Services.AddTransient<IBotCommandService, BotCommandService>();
-
+        builder.Services.AddTransient<IChatServerRepository, ChatServerRepository>();
+        builder.Services.AddTransient<IBotCommandRepository, BotCommandRepository>();
+        builder.Services.AddSingleton<DbContext>(c =>
+            new DbContext(c.GetRequiredService<IMongoCollection<BotCommand>>(),
+                c.GetRequiredService<IMongoCollection<ChatServer>>()));
+        
         builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
         var app = builder.Build();

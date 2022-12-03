@@ -3,13 +3,13 @@ using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using static FluentResults.Result;
 
-namespace Dotbot.Common.Services;
+namespace Dotbot.Infrastructure.Services;
 
-public class GridFsFileService : IGridFsFileService
+public class FileService : IFileService
 {
     private readonly IGridFSBucket _gridFsBucket;
 
-    public GridFsFileService(IGridFSBucket gridFsBucket)
+    public FileService(IGridFSBucket gridFsBucket)
     {
         _gridFsBucket = gridFsBucket;
     }

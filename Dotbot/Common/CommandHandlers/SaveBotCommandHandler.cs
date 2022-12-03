@@ -1,4 +1,5 @@
-﻿using Dotbot.Common.Services;
+﻿using Dotbot.Infrastructure.Repositories;
+using Dotbot.Infrastructure.Services;
 using FluentResults;
 using static FluentResults.Result;
 
@@ -6,11 +7,15 @@ namespace Dotbot.Common.CommandHandlers;
 
 public class SaveBotCommandHandler: IBotCommandHandler
 {
-    private readonly IBotCommandService _botCommandService;
+    private readonly IBotCommandRepository _botCommandRepository;
+    private readonly HttpClient _httpClient;
+    private readonly IFileService _fileService;
 
-    public SaveBotCommandHandler(IBotCommandService botCommandService)
+    public SaveBotCommandHandler(IBotCommandRepository botCommandRepository, HttpClient httpClient, IFileService fileService)
     {
-        _botCommandService = botCommandService;
+        _botCommandRepository = botCommandRepository;
+        _httpClient = httpClient;
+        _fileService = fileService;
     }
 
     public bool Match(string? s) => s == "save";
@@ -22,11 +27,15 @@ public class SaveBotCommandHandler: IBotCommandHandler
         if (await context.HasAttachments())
         {
             var attachments = (await context.GetAttachments()).First();
+            
+            var fileStream = await _httpClient.GetStreamAsync(attachments.Url);
 
-            var httpClient = new HttpClient();
-            var fileStream = await httpClient.GetStreamAsync(attachments.Url);
-
-            var result = await _botCommandService.SaveCommand(await context.GetServerId(), key, attachments.Filename, fileStream,
+            var serverId = await context.GetServerId();
+            
+            var fileUploadResult = await _fileService.SaveFile($"{serverId}:{attachments.Filename}:{key}", fileStream);
+            if (fileUploadResult.IsFailed) return Fail(fileUploadResult.Errors);
+            
+            var result = await _botCommandRepository.SaveCommand(serverId, key, attachments.Filename, fileStream,
                 true);
             if (result.IsFailed)
             {
@@ -42,7 +51,7 @@ public class SaveBotCommandHandler: IBotCommandHandler
             }
 
             var commandContent = string.Join(" ", split[2..]);
-            var result = await _botCommandService.SaveCommand(await context.GetServerId(), key, commandContent, true);
+            var result = await _botCommandRepository.SaveCommand(await context.GetServerId(), key, commandContent, true);
             if (result.IsFailed)
             {
                 await context.SendMessageAsync($"Failed to save command:");

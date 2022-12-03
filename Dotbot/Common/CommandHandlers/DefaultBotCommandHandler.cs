@@ -1,5 +1,6 @@
-﻿using Dotbot.Common.Models;
-using Dotbot.Common.Services;
+﻿using Dotbot.Infrastructure.Entities;
+using Dotbot.Infrastructure.Repositories;
+using Dotbot.Infrastructure.Services;
 using FluentResults;
 using static FluentResults.Result;
 
@@ -7,12 +8,13 @@ namespace Dotbot.Common.CommandHandlers;
 
 public class DefaultBotCommandHandler : IBotCommandHandler
 {
+    private readonly IBotCommandRepository _botCommandRepository;
+    private readonly IFileService _fileService;
 
-    private readonly IBotCommandService _botCommandService;
-
-    public DefaultBotCommandHandler(IBotCommandService botCommandService)
+    public DefaultBotCommandHandler(IBotCommandRepository botCommandRepository, IFileService fileService)
     {
-        _botCommandService = botCommandService;
+        _botCommandRepository = botCommandRepository;
+        _fileService = fileService;
     }
 
     public bool Match(string? s) => s == null;
@@ -22,7 +24,7 @@ public class DefaultBotCommandHandler : IBotCommandHandler
         var messageSplit = content.Split(' ');
 
         var key = messageSplit[0];
-        var command = await _botCommandService.GetCommand(await context.GetServerId(), key);
+        var command = await _botCommandRepository.GetCommand(await context.GetServerId(), key);
 
         if (command.IsSuccess)
         {
@@ -41,7 +43,8 @@ public class DefaultBotCommandHandler : IBotCommandHandler
 
     private async Task<Result> HandleFile(BotCommand command, IServiceContext context)
     {
-        var fileStream = await _botCommandService.GetCommandFileStream(command);
+        if (command.Type != BotCommand.CommandType.FILE) return Fail("Command is not a file");
+        var fileStream = await _fileService.GetFile($"{command.ServiceId}:{command.FileName}:{command.Key}");
         if (fileStream.IsFailed)
         {
             await context.SendMessageAsync($"Cannot find file content for {command.Key}");

@@ -42,4 +42,8 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Dotbot.Infrastructure\Dotbot.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>

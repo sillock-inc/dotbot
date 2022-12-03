@@ -1,9 +1,9 @@
-﻿using Dotbot.Common.Models;
+﻿using Dotbot.Infrastructure.Entities;
 using FluentResults;
 
-namespace Dotbot.Common.Services;
+namespace Dotbot.Infrastructure.Repositories;
 
-public interface IChatServerService
+public interface IChatServerRepository : IRepository<ChatServer>
 {
     Task<Result<ChatServer>> GetServerAsync(string serverId);
     Task<Result<ChatServer>> CreateServerAsync(string serverId);

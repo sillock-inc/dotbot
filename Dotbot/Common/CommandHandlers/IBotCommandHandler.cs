@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 
 namespace Dotbot.Common.CommandHandlers;
+
 public interface IBotCommandHandler
 {
     bool Match(string? s);
