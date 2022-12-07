@@ -60,6 +60,9 @@ public class BotCommandRepository : IBotCommandRepository
 
     public async Task<Result<List<BotCommand>>> GetCommands(int page, int pageSize)
     {
+        if (pageSize < 0)
+            return Fail($"Invalid {nameof(pageSize)} {pageSize}");
+        
         var commands = await _dbContext.BotCommands
             .Find(Builders<BotCommand>.Filter.Empty)
             .SortBy(x => x.Key)
