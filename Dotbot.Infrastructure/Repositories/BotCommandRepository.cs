@@ -57,4 +57,21 @@ public class BotCommandRepository : IBotCommandRepository
         }
         return Ok();
     }
+
+    public async Task<Result<List<BotCommand>>> GetCommands(int page, int pageSize)
+    {
+        var commands = await _dbContext.BotCommands
+            .Find(Builders<BotCommand>.Filter.Empty)
+            .SortBy(x => x.Key)
+            .Skip(page * pageSize)
+            .Limit(pageSize)
+            .ToListAsync();
+        return Ok(commands);
+    }
+
+    public async Task<Result<long>> GetCommandCount()
+    {
+        var count = await _dbContext.BotCommands.CountDocumentsAsync(FilterDefinition<BotCommand>.Empty);
+        return Ok(count);
+    }
 }

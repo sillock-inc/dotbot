@@ -12,4 +12,5 @@ public interface IServiceContext
     Task<string> GetChannelId();
     Task<bool> HasAttachments();
     Task<IReadOnlyCollection<Attachment>> GetAttachments();
+    Task SendEmbedAsync(Embed build);
 }

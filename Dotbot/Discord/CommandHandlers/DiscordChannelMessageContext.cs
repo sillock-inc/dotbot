@@ -48,4 +48,9 @@ public class DiscordChannelMessageContext : IServiceContext
     {
         return _message.Attachments;
     }
+
+    public async Task SendEmbedAsync(Embed build)
+    {
+        await _message.Channel.SendMessageAsync(embed: build);
+    }
 }

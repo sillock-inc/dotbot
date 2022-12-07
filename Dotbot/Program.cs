@@ -70,6 +70,7 @@ internal static class Program
         builder.Services.AddTransient<IBotCommandHandler, DefaultBotCommandHandler>();
         builder.Services.AddTransient<IBotCommandHandler, PingBotCommandHandler>();
         builder.Services.AddTransient<IBotCommandHandler, SaveBotCommandHandler>();
+        builder.Services.AddTransient<IBotCommandHandler, SavedCommandHandler>();
         builder.Services.AddSingleton<IBotCommandHandlerFactory, BotCommandHandlerFactory>();
         builder.Services.AddTransient<IChatServerRepository, ChatServerRepository>();
         builder.Services.AddTransient<IBotCommandRepository, BotCommandRepository>();
