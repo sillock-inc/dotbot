@@ -1,6 +1,8 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using Dotbot.Common.CommandHandlers;
+using Dotbot.Common.Models;
+using Dotbot.Discord.Extensions;
 
 namespace Dotbot.Discord.CommandHandlers;
 
@@ -31,7 +33,7 @@ public class DiscordChannelMessageContext : IServiceContext
 
     public async Task<string> GetServerId()
     {
-        return (_message.Channel as SocketGuildChannel).Guild.Id.ToString();
+        return _message.Channel.AsGuildChannel()?.Guild.Id.ToString();
     }
 
     public async Task<string> GetChannelId()
@@ -52,5 +54,33 @@ public class DiscordChannelMessageContext : IServiceContext
     public async Task SendEmbedAsync(Embed build)
     {
         await _message.Channel.SendMessageAsync(embed: build);
+    }
+
+    public async Task<string?> GetAvatarImageUrl(ulong userId)
+    {
+        var user = _message.Channel.AsGuildChannel()?.Guild.GetUser(userId);
+        return user?.GetDisplayAvatarUrl();
+    }
+
+    public async Task<List<User>> GetUserMentionsAsync()
+    {
+        return _message.MentionedUsers.Select(x => DiscordUserToUser((IGuildUser) x)).ToList();
+    }
+
+    public async Task<User?> GetUserAsync(ulong userId)
+    {
+        var user = _message.Channel.AsGuildChannel()?.Guild.GetUser(userId);
+        return user == null ? null : DiscordUserToUser(user);
+    }
+    
+    private static User DiscordUserToUser(IGuildUser user)
+    {
+        return new User
+        {
+            Id = user.Id,
+            EffectiveAvatarUrl = user.GetDisplayAvatarUrl(size:512),
+            Nickname = user.Nickname,
+            Username = $"{user.Username}#{user.Discriminator}"
+        }; 
     }
 }
