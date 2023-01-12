@@ -4,20 +4,22 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Dotbot.Common.CommandHandlers;
 using Dotbot.Common.Factories;
+using Dotbot.Common.Settings;
 using Dotbot.Database;
 using Dotbot.Database.Entities;
+using Dotbot.Database.Extensions;
 using Dotbot.Database.Repositories;
 using Dotbot.Database.Services;
+using Dotbot.Database.Settings;
 using Dotbot.Discord.EventListeners;
-using Dotbot.Discord.Extensions.Discord;
-using Dotbot.Discord.Extensions.MongoDb;
+using Dotbot.Discord.Extensions;
+using Dotbot.Discord.InteractionHandler;
 using Dotbot.Discord.Services;
-using Dotbot.Discord.Settings;
 using MediatR;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 
-namespace Dotbot.Discord;
+namespace Dotbot;
 
 internal static class Program
 {
@@ -58,7 +60,7 @@ internal static class Program
         builder.Services.AddSingleton<DiscordSocketClient>();
         builder.Services.AddSingleton<IAudioService, AudioService>();
         builder.Services.AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()));
-        builder.Services.AddSingleton<InteractionHandler.InteractionHandler>();
+        builder.Services.AddSingleton<InteractionHandler>();
         builder.Services.AddSingleton<MessageReceivedEventListener>();
         builder.Services.AddHttpClient<SaveBotCommandHandler>();
         
@@ -77,10 +79,10 @@ internal static class Program
             new DbContext(c.GetRequiredService<IMongoCollection<BotCommand>>(),
                 c.GetRequiredService<IMongoCollection<ChatServer>>()));
         
-        builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+        builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 
         var app = builder.Build();
-
+        
         // Configure the HTTP request pipeline.
         //if (app.Environment.IsDevelopment())
         //{
@@ -95,9 +97,8 @@ internal static class Program
         //app.MapControllers();
 
         var client = ClientEventRegistrations.RegisterClientEvents(app.Services);
-
-
-        await app.Services.GetRequiredService<InteractionHandler.InteractionHandler>()
+        
+        await app.Services.GetRequiredService<InteractionHandler>()
             .InitializeAsync();
 
         //var listener = app.Services.GetRequiredService<DiscordEventListener>();

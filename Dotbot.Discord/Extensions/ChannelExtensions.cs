@@ -1,6 +1,6 @@
 ﻿using Discord.WebSocket;
 
-namespace Dotbot.Discord.Extensions.Discord;
+namespace Dotbot.Discord.Extensions;
 
 public static class ChannelExtensions
 {

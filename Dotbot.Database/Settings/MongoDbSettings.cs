@@ -1,4 +1,4 @@
-﻿namespace Dotbot.Discord.Settings;
+﻿namespace Dotbot.Database.Settings;
 
 public class MongoDbSettings
 {

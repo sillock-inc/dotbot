@@ -2,7 +2,7 @@
 using Discord.WebSocket;
 using Dotbot.Common.CommandHandlers;
 using Dotbot.Common.Models;
-using Dotbot.Discord.Extensions.Discord;
+using Dotbot.Discord.Extensions;
 
 namespace Dotbot.Discord.CommandHandlers;
 

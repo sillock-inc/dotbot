@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Dotbot.Database.Entities;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -7,7 +8,7 @@ using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
-namespace Dotbot.Discord.Extensions.MongoDb;
+namespace Dotbot.Database.Extensions;
 
 public static class MongoDbDependencyConfigurationExtensions
 {

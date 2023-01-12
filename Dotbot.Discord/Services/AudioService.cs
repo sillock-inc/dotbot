@@ -3,6 +3,7 @@ using CliWrap;
 using Discord;
 using Discord.Audio;
 using Discord.WebSocket;
+using Microsoft.Extensions.Logging;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 

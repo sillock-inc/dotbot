@@ -1,4 +1,4 @@
-﻿namespace Dotbot.Discord.Settings;
+﻿namespace Dotbot.Common.Settings;
 
 public class BotSettings
 {

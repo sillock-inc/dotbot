@@ -1,7 +1,8 @@
 ﻿using Discord.WebSocket;
 using Dotbot.Discord.EventListeners;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Dotbot.Discord.Extensions.Discord;
+namespace Dotbot.Discord.Extensions;
 
 public static class ClientEventRegistrations
 {

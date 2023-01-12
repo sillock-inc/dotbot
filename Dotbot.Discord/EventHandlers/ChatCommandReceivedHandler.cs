@@ -1,8 +1,9 @@
 ﻿using Dotbot.Common.Factories;
+using Dotbot.Common.Settings;
 using Dotbot.Discord.CommandHandlers;
 using Dotbot.Discord.Events;
-using Dotbot.Discord.Settings;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Dotbot.Discord.EventHandlers;

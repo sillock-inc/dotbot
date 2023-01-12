@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization;
 
-namespace Dotbot.Discord.Extensions.MongoDb;
+namespace Dotbot.Database.Extensions;
 
 public interface IClassMapExtension
 {

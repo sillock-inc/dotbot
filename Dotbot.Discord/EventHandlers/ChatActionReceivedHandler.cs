@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Dotbot.Discord.Events;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Dotbot.Discord.EventHandlers;
 
