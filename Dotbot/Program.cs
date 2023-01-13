@@ -4,6 +4,7 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Dotbot.Common.CommandHandlers;
 using Dotbot.Common.Factories;
+using Dotbot.Common.Services;
 using Dotbot.Common.Settings;
 using Dotbot.Database;
 using Dotbot.Database.Entities;
@@ -52,18 +53,21 @@ internal static class Program
         builder.Services.AddSingleton<IGridFSBucket>(new GridFSBucket(db));
         builder.Services.AddMongoDbCollection<ChatServer, ChatServerClassMapExtension>("springGuild", new ChatServerClassMapExtension());
         builder.Services.AddMongoDbCollection<BotCommand, DiscordCommandClassMapExtension>("DiscordCommands", new DiscordCommandClassMapExtension());
-
+        builder.Services.AddMongoDbCollection<PersistentSetting, PersistentSettingClassMapExtension>("PersistentSettings", new PersistentSettingClassMapExtension());
+        
         builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
         builder.Services.Configure<BotSettings>(builder.Configuration.GetSection("BotSettings"));
         
         builder.Services.AddSingleton(discordConfig);
         builder.Services.AddSingleton<DiscordSocketClient>();
         builder.Services.AddSingleton<IAudioService, AudioService>();
+        builder.Services.AddSingleton<IPersistentSettingsService, PersistentSettingsService>();
+        builder.Services.AddSingleton<IXkcdService, XkcdService>();
         builder.Services.AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()));
         builder.Services.AddSingleton<InteractionHandler>();
         builder.Services.AddSingleton<MessageReceivedEventListener>();
         builder.Services.AddHttpClient<SaveBotCommandHandler>();
-        
+        builder.Services.AddHttpClient<XkcdService>();
         
         //TODO: .AddImplementingInterfaces
         builder.Services.AddTransient<IFileService, FileService>();
@@ -72,12 +76,15 @@ internal static class Program
         builder.Services.AddTransient<IBotCommandHandler, SaveBotCommandHandler>();
         builder.Services.AddTransient<IBotCommandHandler, SavedCommandHandler>();
         builder.Services.AddTransient<IBotCommandHandler, AvatarCommandHandler>();
+        builder.Services.AddTransient<IBotCommandHandler, XkcdBotCommandHandler>();
         builder.Services.AddSingleton<IBotCommandHandlerFactory, BotCommandHandlerFactory>();
         builder.Services.AddTransient<IChatServerRepository, ChatServerRepository>();
         builder.Services.AddTransient<IBotCommandRepository, BotCommandRepository>();
+        builder.Services.AddTransient<IPersistentSettingsRepository, PersistentSettingsRepository>();
         builder.Services.AddSingleton<DbContext>(c =>
             new DbContext(c.GetRequiredService<IMongoCollection<BotCommand>>(),
-                c.GetRequiredService<IMongoCollection<ChatServer>>()));
+                c.GetRequiredService<IMongoCollection<ChatServer>>(), 
+                c.GetRequiredService<IMongoCollection<PersistentSetting>>()));
         
         builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 
