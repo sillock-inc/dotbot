@@ -3,6 +3,7 @@ using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Dotbot.Common.CommandHandlers;
+using Dotbot.Common.CommandHandlers.Moderator;
 using Dotbot.Common.Factories;
 using Dotbot.Common.Services;
 using Dotbot.Common.Settings;
@@ -63,6 +64,7 @@ internal static class Program
         builder.Services.AddSingleton<IAudioService, AudioService>();
         builder.Services.AddSingleton<IPersistentSettingsService, PersistentSettingsService>();
         builder.Services.AddSingleton<IXkcdService, XkcdService>();
+        builder.Services.AddSingleton<IChatServerService, ChatServerService>();
         builder.Services.AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()));
         builder.Services.AddSingleton<InteractionHandler>();
         builder.Services.AddSingleton<MessageReceivedEventListener>();
@@ -77,7 +79,9 @@ internal static class Program
         builder.Services.AddTransient<IBotCommandHandler, SavedCommandHandler>();
         builder.Services.AddTransient<IBotCommandHandler, AvatarCommandHandler>();
         builder.Services.AddTransient<IBotCommandHandler, XkcdBotCommandHandler>();
+        builder.Services.AddTransient<IBotModeratorCommandHandler, AddModeratorCommandHandler>();
         builder.Services.AddSingleton<IBotCommandHandlerFactory, BotCommandHandlerFactory>();
+        builder.Services.AddSingleton<IBotModeratorCommandHandlerFactory, BotModeratorCommandHandlerFactory>();
         builder.Services.AddTransient<IChatServerRepository, ChatServerRepository>();
         builder.Services.AddTransient<IBotCommandRepository, BotCommandRepository>();
         builder.Services.AddTransient<IPersistentSettingsRepository, PersistentSettingsRepository>();
@@ -115,4 +119,5 @@ internal static class Program
         await client.SetGameAsync("Getting re-written in .NET");
         await app.RunAsync();
     }
+    
 }

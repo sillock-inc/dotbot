@@ -8,6 +8,8 @@ namespace Dotbot.Discord.CommandHandlers;
 
 public class DiscordChannelMessageContext : IServiceContext
 {
+    
+    
     private readonly SocketMessage _message;
 
     public DiscordChannelMessageContext(SocketMessage message)
@@ -72,6 +74,11 @@ public class DiscordChannelMessageContext : IServiceContext
     {
         var user = _message.Channel.AsGuildChannel()?.Guild.GetUser(userId);
         return user == null ? null : Convert(user);
+    }
+
+    public async Task<ulong> GetAuthorId()
+    {
+        return _message.Author.Id;
     }
 
     //TODO: Can probably make these extension functions or something

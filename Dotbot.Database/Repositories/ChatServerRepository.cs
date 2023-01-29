@@ -30,4 +30,11 @@ public class ChatServerRepository : IChatServerRepository
         await _dbContext.ChatServers.InsertOneAsync(new ChatServer(serverId));
         return await GetServerAsync(serverId);
     }
+
+    public async Task AddModId(string serverId, string modId)
+    {
+        var filter = Builders<ChatServer>.Filter.Where(x => x.ServiceId == serverId);
+        var update = Builders<ChatServer>.Update.Push(u => u.ModeratorIds, modId);
+        await _dbContext.ChatServers.UpdateOneAsync(filter, update);
+    }
 }
