@@ -2,19 +2,32 @@
 using Discord.WebSocket;
 using Dotbot.Common.CommandHandlers;
 using Dotbot.Common.Models;
+using Dotbot.Database.Entities;
 using Dotbot.Discord.Extensions;
 
 namespace Dotbot.Discord.CommandHandlers;
 
 public class DiscordChannelMessageContext : IServiceContext
 {
-    
-    
     private readonly SocketMessage _message;
-
+    private readonly ChatServer? _guild;
+    
     public DiscordChannelMessageContext(SocketMessage message)
     {
         _message = message;
+    }    
+    
+    public DiscordChannelMessageContext(SocketMessage message, ChatServer? guild)
+    {
+        _message = message;
+        _guild = guild;
+    }
+
+    public Privilege GetPrivilege()
+    {
+        if (_guild is null) return Privilege.Base;
+
+        return _guild.ModeratorIds.Contains(_message.Author.Id.ToString()) ? Privilege.Moderator : Privilege.Base;
     }
 
     public async Task ReplyAsync(string msg)
@@ -128,5 +141,4 @@ public class DiscordChannelMessageContext : IServiceContext
 
         return eb.Build();
     }
-
 }

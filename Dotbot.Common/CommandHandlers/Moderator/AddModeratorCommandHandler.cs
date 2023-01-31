@@ -5,28 +5,20 @@ using static FluentResults.Result;
 
 namespace Dotbot.Common.CommandHandlers.Moderator;
 
-public class AddModeratorCommandHandler: IBotModeratorCommandHandler
+public class AddModeratorCommandHandler: BotCommandHandler
 {
     public AddModeratorCommandHandler(IChatServerService chatServerService)
     {
         _chatServerService = chatServerService;
     }
 
-    public ModeratorCommandType CommandType => ModeratorCommandType.AddModerator;
+    public override CommandType CommandType => CommandType.AddModerator;
+    public override Privilege PrivilegeLevel => Privilege.Moderator;
 
     private readonly IChatServerService _chatServerService;
     
-    [Test]
-    public async Task<Result> HandleAsync(string content, IServiceContext context)
+    protected override async Task<Result> ExecuteAsync(string content, IServiceContext context)
     {
-        var serverId = await context.GetServerId();
-        var (isSuccess, isFailed, value) = await _chatServerService.IsModerator(serverId, (await context.GetAuthorId()).ToString());
-        if (isFailed || (isSuccess && !value))
-        {
-            await context.SendEmbedAsync(ErrorMessage("Not authorised"));
-            return Fail("User not authorised");
-        }
-
         var mentions = await context.GetUserMentionsAsync();
 
         if (mentions.Count == 0)
@@ -35,6 +27,8 @@ public class AddModeratorCommandHandler: IBotModeratorCommandHandler
             return Fail("No users provided"); 
         }
         
+        var serverId = await context.GetServerId();
+
         foreach (var mention in mentions)
         {
             var result = await _chatServerService.AddModerator(serverId, mention.Id.ToString());
@@ -48,14 +42,6 @@ public class AddModeratorCommandHandler: IBotModeratorCommandHandler
         await context.SendEmbedAsync(Success("Users added as moderators"));
         
         return Ok();
-    }
-
-    public class TestAttribute : Attribute
-    {
-        public TestAttribute()
-        {
-            
-        }
     }
     
 }

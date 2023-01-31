@@ -73,15 +73,14 @@ internal static class Program
         
         //TODO: .AddImplementingInterfaces
         builder.Services.AddTransient<IFileService, FileService>();
-        builder.Services.AddTransient<IBotCommandHandler, DefaultBotCommandHandler>();
-        builder.Services.AddTransient<IBotCommandHandler, PingBotCommandHandler>();
-        builder.Services.AddTransient<IBotCommandHandler, SaveBotCommandHandler>();
-        builder.Services.AddTransient<IBotCommandHandler, SavedCommandHandler>();
-        builder.Services.AddTransient<IBotCommandHandler, AvatarCommandHandler>();
-        builder.Services.AddTransient<IBotCommandHandler, XkcdBotCommandHandler>();
-        builder.Services.AddTransient<IBotModeratorCommandHandler, AddModeratorCommandHandler>();
+        builder.Services.AddTransient<BotCommandHandler, DefaultBotCommandHandler>();
+        builder.Services.AddTransient<BotCommandHandler, PingBotCommandHandler>();
+        builder.Services.AddTransient<BotCommandHandler, SaveBotCommandHandler>();
+        builder.Services.AddTransient<BotCommandHandler, SavedCommandHandler>();
+        builder.Services.AddTransient<BotCommandHandler, AvatarCommandHandler>();
+        builder.Services.AddTransient<BotCommandHandler, XkcdBotCommandHandler>();
+        builder.Services.AddTransient<BotCommandHandler, AddModeratorCommandHandler>();
         builder.Services.AddSingleton<IBotCommandHandlerFactory, BotCommandHandlerFactory>();
-        builder.Services.AddSingleton<IBotModeratorCommandHandlerFactory, BotModeratorCommandHandlerFactory>();
         builder.Services.AddTransient<IChatServerRepository, ChatServerRepository>();
         builder.Services.AddTransient<IBotCommandRepository, BotCommandRepository>();
         builder.Services.AddTransient<IPersistentSettingsRepository, PersistentSettingsRepository>();

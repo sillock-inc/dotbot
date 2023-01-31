@@ -5,17 +5,19 @@ using FluentResults;
 
 namespace Dotbot.Common.CommandHandlers;
 
-public class XkcdBotCommandHandler: IBotCommandHandler
+public class XkcdBotCommandHandler: BotCommandHandler
 {
     public XkcdBotCommandHandler(IXkcdService xkcdService)
     {
         _xkcdService = xkcdService;
     }
-    public CommandType CommandType => CommandType.Xkcd;
+    public override CommandType CommandType => CommandType.Xkcd;
+    public override Privilege PrivilegeLevel => Privilege.Base;
+
 
     private readonly IXkcdService _xkcdService;
     
-    public async Task<Result> HandleAsync(string content, IServiceContext context)
+    protected override async Task<Result> ExecuteAsync(string content, IServiceContext context)
     {
         var strings = content.Split(' ');
         Result<XkcdComic> comic;

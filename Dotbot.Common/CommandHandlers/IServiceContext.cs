@@ -4,7 +4,7 @@ namespace Dotbot.Common.CommandHandlers;
 
 public interface IServiceContext
 {
-    Privilege Privilege();
+    Privilege GetPrivilege();
     Task ReplyAsync(string msg);
     Task SendMessageAsync(string msg);
     Task SendFileAsync(string fileName, Stream fs);
@@ -16,10 +16,4 @@ public interface IServiceContext
     Task<List<User>> GetUserMentionsAsync();
     Task<User?> GetUserAsync(ulong userId);
     Task<ulong> GetAuthorId();
-}
-
-public enum Privilege {
-    Admin,
-    Moderator,
-    Any
 }
