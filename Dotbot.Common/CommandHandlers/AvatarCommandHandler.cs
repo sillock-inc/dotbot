@@ -23,7 +23,7 @@ public class AvatarCommandHandler : BotCommandHandler
 
     private static async Task SendAvatarEmbed(User user, IServiceContext context)
     {
-        await context.SendEmbedAsync(new FormattedMessage
+        await context.SendFormattedMessageAsync(new FormattedMessage
         {
             Title = user.Username, 
             ImageUrl = user.EffectiveAvatarUrl

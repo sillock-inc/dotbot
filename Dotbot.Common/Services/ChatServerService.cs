@@ -36,9 +36,16 @@ public class ChatServerService : IChatServerService
         return Ok();
     }
 
-    public Task<Result> RemoveModerator(string serverId, string modId)
+    public async Task<Result> RemoveModerator(string serverId, string modId)
     {
-        throw new NotImplementedException();
+        var server = await Get(serverId);
+        if (server.IsFailed)
+        {
+            return Fail(server.Errors);
+        }
+
+        await _repository.RemoveModId(serverId, modId);
+        return Ok();
     }
 
     public async Task<Result<bool>> IsModerator(string serverId, string modId)
@@ -52,8 +59,15 @@ public class ChatServerService : IChatServerService
         return Ok(server.Value.ModeratorIds.Contains(modId));
     }
 
-    public Task<Result> SetXkcdChannel(string serverId, string modId)
+    public async Task<Result> SetXkcdChannel(string serverId, string channelId)
     {
-        throw new NotImplementedException();
+        var server = await Get(serverId);
+        if (server.IsFailed)
+        {
+            return Fail(server.Errors);
+        }
+
+        await _repository.SetXkcdChannelId(serverId, channelId);
+        return Ok();
     }
 }

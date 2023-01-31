@@ -32,7 +32,7 @@ public class XkcdBotCommandHandler: BotCommandHandler
 
         if (comic.IsFailed)
         {
-            await context.SendEmbedAsync(new FormattedMessage
+            await context.SendFormattedMessageAsync(new FormattedMessage
             {
                 Color = Color.Red,
                 Description = "Failed to retrieve latest comic",
@@ -41,7 +41,7 @@ public class XkcdBotCommandHandler: BotCommandHandler
             return Result.Fail("Failed to retrieve latest comic");
         }
 
-        await context.SendEmbedAsync(new FormattedMessage
+        await context.SendFormattedMessageAsync(new FormattedMessage
         {
             ImageUrl = comic.Value.Img,
             Title = $"XKCD: #{comic.Value.Num}",

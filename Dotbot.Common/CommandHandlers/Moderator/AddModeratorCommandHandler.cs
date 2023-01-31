@@ -23,7 +23,7 @@ public class AddModeratorCommandHandler: BotCommandHandler
 
         if (mentions.Count == 0)
         {
-            await context.SendEmbedAsync(ErrorMessage("No users provided"));
+            await context.SendFormattedMessageAsync(ErrorMessage("No users provided"));
             return Fail("No users provided"); 
         }
         
@@ -34,12 +34,12 @@ public class AddModeratorCommandHandler: BotCommandHandler
             var result = await _chatServerService.AddModerator(serverId, mention.Id.ToString());
             if(result.IsFailed)
             {
-                await context.SendEmbedAsync(ErrorMessage(result.Errors));
+                await context.SendFormattedMessageAsync(ErrorMessage(result.Errors));
                 return Fail(result.Reasons.ToString()); 
             }
         }
 
-        await context.SendEmbedAsync(Success("Users added as moderators"));
+        await context.SendFormattedMessageAsync(Success("Users added as moderators"));
         
         return Ok();
     }

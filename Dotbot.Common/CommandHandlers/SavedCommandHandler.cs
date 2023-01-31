@@ -67,7 +67,7 @@ public class SavedCommandHandler: BotCommandHandler
             formattedMessage.Description = page < 0 ? "Invalid page" : "No commands found";  
         }
         
-        await context.SendEmbedAsync(formattedMessage);
+        await context.SendFormattedMessageAsync(formattedMessage);
 
         return Result.Ok();
     }

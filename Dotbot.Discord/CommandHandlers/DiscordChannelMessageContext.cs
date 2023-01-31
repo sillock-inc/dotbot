@@ -66,7 +66,7 @@ public class DiscordChannelMessageContext : IServiceContext
         return _message.Attachments.Select(Convert).ToList();
     }
 
-    public async Task SendEmbedAsync(FormattedMessage build)
+    public async Task SendFormattedMessageAsync(FormattedMessage build)
     {
         await _message.Channel.SendMessageAsync(embed: Convert(build));
     }

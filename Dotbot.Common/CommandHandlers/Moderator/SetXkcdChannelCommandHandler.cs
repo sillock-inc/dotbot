@@ -1,6 +1,31 @@
-﻿namespace Dotbot.Common.CommandHandlers.Moderator;
+﻿using Dotbot.Common.Services;
+using FluentResults;
+using static Dotbot.Common.Models.FormattedMessage;
+using static FluentResults.Result;
 
-public class SetXkcdChannelCommandHandler
+namespace Dotbot.Common.CommandHandlers.Moderator;
+
+public class SetXkcdChannelCommandHandler: BotCommandHandler
 {
-    
+    private readonly IChatServerService _chatServerService;
+    public SetXkcdChannelCommandHandler(IChatServerService chatServerService)
+    {
+        _chatServerService = chatServerService;
+    }
+
+    public override CommandType CommandType => CommandType.SetXkcdChannel;
+    public override Privilege PrivilegeLevel => Privilege.Moderator;
+    protected override async Task<Result> ExecuteAsync(string content, IServiceContext context)
+    {
+        var channelId  = await context.GetChannelId();
+        var serverId = await context.GetServerId();
+        var result = await _chatServerService.SetXkcdChannel(serverId, channelId);
+
+        if (result.IsSuccess)
+        {
+            await context.SendFormattedMessageAsync(Success("Channel set as XKCD channel"));
+        }
+        
+        return OkIf(result.IsSuccess, string.Join(", ", result.Errors));
+    }
 }
