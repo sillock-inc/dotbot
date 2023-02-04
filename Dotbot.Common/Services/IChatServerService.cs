@@ -11,4 +11,5 @@ public interface IChatServerService
     Task<Result> RemoveModerator(string serverId, string modId);
     Task<Result<bool>> IsModerator(string serverId, string modId);
     Task<Result> SetXkcdChannel(string serverId, string modId);
+    Task<Result<IEnumerable<ChatServer>>> GetXkcdServers();
 }

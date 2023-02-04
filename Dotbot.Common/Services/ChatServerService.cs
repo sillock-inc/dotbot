@@ -70,4 +70,16 @@ public class ChatServerService : IChatServerService
         await _repository.SetXkcdChannelId(serverId, channelId);
         return Ok();
     }
+
+    public async Task<Result<IEnumerable<ChatServer>>> GetXkcdServers()
+    {
+        //TODO: Probs should write a DB query to do this but I'm too lazy right now and this only gets called every few hours
+        var all = await _repository.GetAll();
+        if (all.IsFailed)
+        {
+            return Fail(all.Errors);
+        }
+
+        return Ok(all.Value.Where(x => !string.IsNullOrEmpty(x.XkcdChannelId)));
+    }
 }

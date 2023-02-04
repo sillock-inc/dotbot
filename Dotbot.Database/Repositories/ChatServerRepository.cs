@@ -57,4 +57,9 @@ public class ChatServerRepository : IChatServerRepository
         var update = Builders<ChatServer>.Update.Unset(u => u.XkcdChannelId);
         await _dbContext.ChatServers.UpdateOneAsync(filter, update);
     }
+
+    public async Task<Result<List<ChatServer>>> GetAll()
+    {
+        return Result.Ok(_dbContext.ChatServers.AsQueryable().ToList());
+    }
 }

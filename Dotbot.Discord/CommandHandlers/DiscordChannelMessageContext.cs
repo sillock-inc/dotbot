@@ -66,9 +66,9 @@ public class DiscordChannelMessageContext : IServiceContext
         return _message.Attachments.Select(Convert).ToList();
     }
 
-    public async Task SendFormattedMessageAsync(FormattedMessage build)
+    public async Task SendFormattedMessageAsync(FormattedMessage message)
     {
-        await _message.Channel.SendMessageAsync(embed: Convert(build));
+        await _message.Channel.SendMessageAsync(embed: message.Convert());
     }
 
 
@@ -114,31 +114,5 @@ public class DiscordChannelMessageContext : IServiceContext
             Url = attachment.Url
         };
     }
-
-    private static Embed Convert(FormattedMessage message)
-    {
-        Color? color = null;
-
-        if (message.Color != null)
-        {
-            var msgColor = (System.Drawing.Color)message.Color;
-            color = new Color(msgColor.R, msgColor.G, msgColor.B);
-        }
-
-        var eb = new EmbedBuilder
-        {
-            Title = message.Title,
-            ImageUrl = message.ImageUrl,
-            Description = message.Description,
-            Color = color,
-            Timestamp = message.Timestamp
-        };
-
-        foreach (var field in message.Fields)
-        {
-            eb.AddField(field.Name, field.Value, field.Inline);
-        }
-
-        return eb.Build();
-    }
+    
 }

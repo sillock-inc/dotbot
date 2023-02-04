@@ -11,4 +11,5 @@ public interface IChatServerRepository : IRepository<ChatServer>
     Task RemoveModId(string serverId, string modId);
     Task SetXkcdChannelId(string serverId, string channelId);
     Task UnSetXkcdChannelId(string serverId);
+    Task<Result<List<ChatServer>>> GetAll();
 }

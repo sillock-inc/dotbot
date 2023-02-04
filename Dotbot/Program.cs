@@ -68,6 +68,7 @@ internal static class Program
         builder.Services.AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()));
         builder.Services.AddSingleton<InteractionHandler>();
         builder.Services.AddSingleton<MessageReceivedEventListener>();
+        builder.Services.AddSingleton<IHostedService, XkcdHostedService>();
         builder.Services.AddHttpClient<SaveBotCommandHandler>();
         builder.Services.AddHttpClient<XkcdService>();
         
@@ -86,6 +87,7 @@ internal static class Program
         builder.Services.AddTransient<IChatServerRepository, ChatServerRepository>();
         builder.Services.AddTransient<IBotCommandRepository, BotCommandRepository>();
         builder.Services.AddTransient<IPersistentSettingsRepository, PersistentSettingsRepository>();
+        builder.Services.AddTransient<IXkcdSenderService, DiscordXkcdSenderService>();
         builder.Services.AddSingleton<DbContext>(c =>
             new DbContext(c.GetRequiredService<IMongoCollection<BotCommand>>(),
                 c.GetRequiredService<IMongoCollection<ChatServer>>(), 
@@ -108,7 +110,7 @@ internal static class Program
 
         //app.MapControllers();
 
-        var client = ClientEventRegistrations.RegisterClientEvents(app.Services);
+        var client = app.Services.RegisterClientEvents();
         
         await app.Services.GetRequiredService<InteractionHandler>()
             .InitializeAsync();

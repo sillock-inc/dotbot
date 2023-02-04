@@ -12,7 +12,7 @@ public interface IServiceContext
     Task<string> GetChannelId();
     Task<bool> HasAttachments();
     Task<IReadOnlyCollection<MessageAttachment>> GetAttachments();
-    Task SendFormattedMessageAsync(FormattedMessage build); 
+    Task SendFormattedMessageAsync(FormattedMessage message); 
     Task<List<User>> GetUserMentionsAsync();
     Task<User?> GetUserAsync(ulong userId);
     Task<ulong> GetAuthorId();

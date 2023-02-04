@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Dotbot.Common.Services;
 using FluentResults;
 
 namespace Dotbot.Common.Models;
@@ -64,4 +65,35 @@ public class FormattedMessage
         };
     }
 
+    public static FormattedMessage XkcdMessage(XkcdComic comic, bool latest=false)
+    {
+        return new FormattedMessage
+        {
+            ImageUrl = comic.Img,
+            Title = latest ? $"Latest Comic #{comic.Num}" : $"XKCD: #{comic.Num}",
+            Color = System.Drawing.Color.FromArgb(157, 3, 252),
+            Fields = new List<Field>
+            {
+                new()
+                {
+                    Name = "Title",
+                    Value = comic.Title,
+                    Inline = true
+                },
+                new()
+                {
+                    Name = "Published",
+                    Value = $"{comic.Day}/{comic.Month}/{comic.Year}",
+                    Inline = true
+                },
+                new()
+                {
+                    Name = "Alt Text",
+                    Value = comic.Alt,
+                    Inline = true
+                }
+            }
+        };
+    }
+    
 }

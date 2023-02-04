@@ -21,7 +21,9 @@ public class XkcdBotCommandHandler: BotCommandHandler
     {
         var strings = content.Split(' ');
         Result<XkcdComic> comic;
-        if (strings.Length > 1 && int.TryParse(strings[1], out var comicNum))
+        var comicNum = 0;
+        var hasComicNum = strings.Length > 1 && int.TryParse(strings[1], out comicNum);
+        if (hasComicNum)
         {
             comic = await _xkcdService.GetComic(comicNum);
         }
@@ -41,33 +43,7 @@ public class XkcdBotCommandHandler: BotCommandHandler
             return Result.Fail("Failed to retrieve latest comic");
         }
 
-        await context.SendFormattedMessageAsync(new FormattedMessage
-        {
-            ImageUrl = comic.Value.Img,
-            Title = $"XKCD: #{comic.Value.Num}",
-            Color = Color.FromArgb(157,3, 252),
-            Fields = new List<FormattedMessage.Field>
-            {
-                new()
-                {
-                    Name = "Title",
-                    Value = comic.Value.Title,
-                    Inline = true
-                },
-                new()
-                {
-                    Name = "Published",
-                    Value = $"{comic.Value.Day}/{comic.Value.Month}/{comic.Value.Year}",
-                    Inline = true
-                },
-                new()
-                {
-                    Name = "Alt Text",
-                    Value = comic.Value.Alt,
-                    Inline = true
-                }
-            }
-        });
+        await context.SendFormattedMessageAsync(FormattedMessage.XkcdMessage(comic.Value, !hasComicNum));
         return Result.Ok();
     }
 }
