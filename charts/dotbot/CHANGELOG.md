@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/Sillock-Inc/Dotbot/compare/dotbot-v0.1.2...dotbot-v0.2.0) (2024-01-22)
+
+
+### Features
+
+* bump chart.yaml minor version for testing ([2a291cd](https://github.com/Sillock-Inc/Dotbot/commit/2a291cd7667cfd8ff83d79aba1424f8b4a49b764))
+
 ## [0.1.2](https://github.com/Sillock-Inc/Dotbot/compare/dotbot-v0.1.1...dotbot-v0.1.2) (2024-01-22)
 
 
