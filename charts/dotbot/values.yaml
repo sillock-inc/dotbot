@@ -53,8 +53,8 @@ jobs:
       fsGroup: 2000
     image:
       repository: "ghcr.io/sillock-inc/xkcd.job"
-      tag: "0.1.2"
-      digest: "sha256:fbba5d889baa4ed46134134ab28227a3077b21c0edb09639e2003fcc5a23c509"
+      tag: "0.1.3"
+      digest: "sha256:cd36f5f575c7d5bf6ee29e5ef1a2075b912035ecbe25c8c0859eacb2178781c9"
       imagePullPolicy: Always
     env:
       - name: ECHO_VAR
