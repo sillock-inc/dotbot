@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   dotbot:
   - apiVersion: v2
+    appVersion: 0.3.13
+    created: "2024-01-31T23:03:55.240731298Z"
+    description: A Helm chart for Kubernetes
+    digest: 16bcaa04f81858a1d3e736493df023c6742137b00dfa35c356af49f06250c65d
+    name: dotbot
+    type: application
+    urls:
+    - https://github.com/sillock-inc/dotbot/releases/download/dotbot-0.6.10/dotbot-0.6.10.tgz
+    version: 0.6.10
+  - apiVersion: v2
     appVersion: 0.3.12
     created: "2024-01-31T22:55:13.147526229Z"
     description: A Helm chart for Kubernetes
@@ -101,4 +111,4 @@ entries:
     urls:
     - https://github.com/sillock-inc/dotbot/releases/download/dotbot-0.6.0/dotbot-0.6.0.tgz
     version: 0.6.0
-generated: "2024-01-31T22:55:13.147570813Z"
+generated: "2024-01-31T23:03:55.240785418Z"
