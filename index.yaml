@@ -3,6 +3,20 @@ entries:
   dotbot:
   - apiVersion: v2
     appVersion: 1.0.4
+    created: "2024-10-12T00:19:20.09747151Z"
+    description: A Helm chart for Kubernetes
+    digest: 113bd4113f5514b51e183b87c0b7f2df1faf7283386548088015a761f9d7add0
+    home: https://github.com/opentoucan/dotbot
+    maintainers:
+    - name: sillock1
+      url: https://github.com/sillock1
+    name: dotbot
+    type: application
+    urls:
+    - https://github.com/opentoucan/dotbot/releases/download/dotbot-0.8.8/dotbot-0.8.8.tgz
+    version: 0.8.8
+  - apiVersion: v2
+    appVersion: 1.0.4
     created: "2024-10-11T22:49:53.122490409Z"
     description: A Helm chart for Kubernetes
     digest: ac08080996787e0e6b9a709b2d7c4543a14bd63b1c148ebe32eb86e5df4ac6bd
@@ -299,4 +313,4 @@ entries:
     urls:
     - https://github.com/sillock-inc/dotbot/releases/download/dotbot-0.6.0/dotbot-0.6.0.tgz
     version: 0.6.0
-generated: "2024-10-11T22:49:53.122774599Z"
+generated: "2024-10-12T00:19:20.097811196Z"
