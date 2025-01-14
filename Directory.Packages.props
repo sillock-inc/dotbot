@@ -7,7 +7,7 @@
     <MicrosoftExtensionsVersion>9.0.0</MicrosoftExtensionsVersion>
     <EfVersion>9.0.0</EfVersion>
     <RuntimeVersion>9.0.0</RuntimeVersion>
-    <GrpcVersion>2.59.0</GrpcVersion>
+    <GrpcVersion>2.67.0</GrpcVersion>
     <OtelVersion>1.10.0</OtelVersion>
     <MassTransitVersion>8.3.4</MassTransitVersion>
   </PropertyGroup>
