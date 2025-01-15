@@ -3,10 +3,10 @@
     <TargetFramework>net9.0</TargetFramework>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-    <AspnetVersion>9.0.0</AspnetVersion>
-    <MicrosoftExtensionsVersion>9.0.0</MicrosoftExtensionsVersion>
-    <EfVersion>9.0.0</EfVersion>
-    <RuntimeVersion>9.0.0</RuntimeVersion>
+    <AspnetVersion>9.0.1</AspnetVersion>
+    <MicrosoftExtensionsVersion>9.0.1</MicrosoftExtensionsVersion>
+    <EfVersion>9.0.1</EfVersion>
+    <RuntimeVersion>9.0.1</RuntimeVersion>
     <GrpcVersion>2.59.0</GrpcVersion>
     <OtelVersion>1.10.0</OtelVersion>
     <MassTransitVersion>8.3.4</MassTransitVersion>
@@ -65,7 +65,7 @@
     <PackageVersion Include="FuzzySharp" Version="2.0.2" />
     <PackageVersion Include="Azure.Identity" Version="1.13.2" />
     <PackageVersion Include="System.Drawing.Common" Version="9.0.0" />
-    <PackageVersion Include="System.Formats.Asn1" Version="9.0.0" />
+    <PackageVersion Include="System.Formats.Asn1" Version="9.0.1" />
     <!-- MassTransit -->
     <PackageVersion Include="MassTransit" Version="$(MassTransitVersion)" />
     <PackageVersion Include="MassTransit.RabbitMQ" Version="$(MassTransitVersion)" />
