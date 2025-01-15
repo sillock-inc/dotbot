@@ -4,7 +4,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <AspnetVersion>9.0.0</AspnetVersion>
-    <MicrosoftExtensionsVersion>9.0.0</MicrosoftExtensionsVersion>
+    <MicrosoftExtensionsVersion>9.1.0</MicrosoftExtensionsVersion>
     <EfVersion>9.0.0</EfVersion>
     <RuntimeVersion>9.0.0</RuntimeVersion>
     <GrpcVersion>2.59.0</GrpcVersion>
